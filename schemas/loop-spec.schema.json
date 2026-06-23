@@ -1,0 +1,324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Hermes Agent Loop Spec",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "name",
+    "goal",
+    "risk_class",
+    "trigger",
+    "inputs",
+    "state",
+    "tools",
+    "isolation",
+    "verification",
+    "stop_conditions",
+    "human_gate",
+    "outputs",
+    "receipt"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "risk_class": {
+      "enum": [
+        "L0",
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5"
+      ]
+    },
+    "trigger": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "manual",
+            "cron",
+            "webhook",
+            "kanban",
+            "github_issue",
+            "file_change",
+            "other"
+          ]
+        },
+        "schedule": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timezone": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "inputs": {
+      "type": "object",
+      "required": [
+        "required"
+      ],
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "optional": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "state": {
+      "type": "object",
+      "required": [
+        "backend",
+        "location",
+        "read_before_run"
+      ],
+      "properties": {
+        "backend": {
+          "enum": [
+            "none",
+            "file",
+            "kanban",
+            "github_issue",
+            "database",
+            "receipt"
+          ]
+        },
+        "location": {
+          "type": "string"
+        },
+        "read_before_run": {
+          "type": "boolean"
+        },
+        "update_after_run": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "tools": {
+      "type": "object",
+      "required": [
+        "allowed",
+        "forbidden_actions"
+      ],
+      "properties": {
+        "allowed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "forbidden_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "isolation": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "read_only",
+            "temp_dir",
+            "git_branch",
+            "git_worktree",
+            "profile_boundary",
+            "container",
+            "none"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "verification": {
+      "type": "object",
+      "required": [
+        "deterministic_checks",
+        "review_checks"
+      ],
+      "properties": {
+        "deterministic_checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "method",
+              "pass_condition"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pass_condition": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "review_checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reviewer": {
+                "type": "string"
+              },
+              "rubric": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "definition_of_done": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "stop_conditions": {
+      "type": "object",
+      "required": [
+        "max_iterations",
+        "max_runtime_minutes",
+        "success_signal",
+        "failure_policy"
+      ],
+      "properties": {
+        "max_iterations": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "max_runtime_minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1440
+        },
+        "success_signal": {
+          "type": "string"
+        },
+        "failure_policy": {
+          "type": "string"
+        },
+        "stop_on_repeated_error": {
+          "type": "boolean"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "human_gate": {
+      "type": "object",
+      "required": [
+        "required_for",
+        "approval_format"
+      ],
+      "properties": {
+        "required_for": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "approval_format": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "outputs": {
+      "type": "object",
+      "required": [
+        "artifacts"
+      ],
+      "properties": {
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "receipt": {
+      "type": "object",
+      "required": [
+        "required",
+        "path"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "path": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

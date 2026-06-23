@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "loop_name",
+    "run_id",
+    "outcome",
+    "stop_reason",
+    "verification_summary",
+    "human_readable_summary"
+  ]
+}

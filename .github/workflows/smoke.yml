@@ -1,0 +1,23 @@
+name: smoke
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install package
+        run: python -m pip install -e .[dev]
+      - name: Run tests
+        run: pytest -q
+      - name: Run repository smoke
+        run: bash scripts/smoke.sh
+      - name: Run installed CLI smoke
+        run: bash scripts/installed_cli_smoke.sh

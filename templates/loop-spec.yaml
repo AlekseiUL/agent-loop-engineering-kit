@@ -1,0 +1,63 @@
+schema_version: "1.0"
+name: "example-loop"
+goal: "Describe the bounded result this loop should produce."
+risk_class: "L1"
+trigger:
+  type: manual
+  schedule: null
+  timezone: null
+inputs:
+  required:
+    - "source to inspect"
+  optional: []
+state:
+  backend: file
+  location: "state/example-loop.json"
+  read_before_run: true
+  update_after_run: true
+tools:
+  allowed:
+    - read_files
+    - search_files
+    - write_report
+  forbidden_actions:
+    - delete_files
+    - access_secrets
+    - public_posting
+    - production_deploy
+    - payments
+isolation:
+  mode: read_only
+  notes: "Start read-only."
+verification:
+  deterministic_checks:
+    - name: receipt_exists
+      method: check output receipt path exists
+      pass_condition: receipt includes stop_reason
+  review_checks:
+    - name: human_readability
+      reviewer: human
+      rubric: "Can a human understand the receipt in two minutes?"
+  definition_of_done:
+    - "receipt written"
+    - "no forbidden action attempted"
+stop_conditions:
+  max_iterations: 1
+  max_runtime_minutes: 15
+  success_signal: "receipt_written"
+  failure_policy: "stop_and_report"
+  stop_on_repeated_error: true
+human_gate:
+  required_for:
+    - deletion
+    - secrets
+    - public_posting
+    - production_deploy
+    - payments
+  approval_format: "APPROVE LOOP ACTION: <action> / <scope> / <rollback>"
+outputs:
+  artifacts:
+    - "reports/example-loop.md"
+receipt:
+  required: true
+  path: "receipts/example-loop.latest.md"

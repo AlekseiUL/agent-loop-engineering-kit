@@ -1,0 +1,33 @@
+loop_name: daily-briefing-loop
+run_id: example-daily-briefing-loop-001
+status: DRY_RUN
+trigger: manual example
+started_at: "2026-06-23T12:00:00Z"
+ended_at: "2026-06-23T12:01:00Z"
+hermes_profile: example-profile
+agent_version: unknown
+loop_spec_version: "1.0"
+input_summary: "Dry-run example for a daily briefing loop; no private notes or external systems touched."
+input_hashes: []
+actions_taken:
+  - validated loop spec
+  - rendered example receipt
+tool_calls: []
+commands_run:
+  - command: python scripts/validate_loop_spec.py examples/daily-briefing-loop/loop-spec.yaml
+    exit_code: 0
+    evidence: PASS
+verification:
+  - name: spec_validation
+    result: PASS
+    evidence: scripts/validate_loop_spec.py
+stop_reason: dry_run_example_complete
+changed_files: []
+approval_events: []
+redactions: []
+rollback_available: false
+rollback: null
+artifacts:
+  - receipts/daily-briefing-loop.receipt.md
+risks:
+  - no live external system touched in example mode

@@ -1,0 +1,51 @@
+schema_version: "1.0"
+name: "bad-cron-repo-editor"
+goal: "Edit repository files every hour without review."
+risk_class: "L3"
+trigger:
+  type: cron
+  schedule: "0 * * * *"
+  timezone: "local"
+inputs:
+  required:
+    - "repository path"
+state:
+  backend: file
+  location: "state/bad-cron-repo-editor.json"
+  read_before_run: true
+tools:
+  allowed:
+    - read_files
+    - write_files
+    - terminal
+  forbidden_actions:
+    - delete_files
+    - access_secrets
+    - public_posting
+    - production_deploy
+    - payments
+isolation:
+  mode: none
+verification:
+  deterministic_checks: []
+  review_checks:
+    - name: model_self_review
+stop_conditions:
+  max_iterations: 5
+  max_runtime_minutes: 60
+  success_signal: "agent says done"
+  failure_policy: "retry until works"
+human_gate:
+  required_for:
+    - deletion
+    - secrets
+    - public_posting
+    - production_deploy
+    - payments
+  approval_format: "ask if needed"
+outputs:
+  artifacts:
+    - "modified repo"
+receipt:
+  required: true
+  path: "receipts/bad-cron-repo-editor.md"

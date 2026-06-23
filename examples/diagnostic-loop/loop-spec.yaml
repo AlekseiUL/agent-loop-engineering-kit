@@ -1,0 +1,63 @@
+schema_version: "1.0"
+name: "diagnostic-loop"
+goal: "Run bounded read-only diagnostics and return ranked causes with approval-gated fixes."
+risk_class: "L1"
+trigger:
+  type: manual
+  schedule: null
+  timezone: null
+inputs:
+  required:
+    - "diagnostic target"
+  optional: []
+state:
+  backend: receipt
+  location: "receipts/diagnostic.receipt.md"
+  read_before_run: true
+  update_after_run: true
+tools:
+  allowed:
+    - read_metadata
+    - count_events
+    - write_report
+  forbidden_actions:
+    - delete_files
+    - access_secrets
+    - public_posting
+    - production_deploy
+    - payments
+isolation:
+  mode: read_only
+  notes: "Diagnosis only; fixes require approval."
+verification:
+  deterministic_checks:
+    - name: bounded_scan
+      method: count-only scan
+      pass_condition: limits and redactions recorded
+  review_checks:
+    - name: human_readability
+      reviewer: human
+      rubric: "Can a human understand the receipt in two minutes?"
+  definition_of_done:
+    - "receipt written"
+    - "no forbidden action attempted"
+stop_conditions:
+  max_iterations: 1
+  max_runtime_minutes: 30
+  success_signal: "diagnostic_report_written"
+  failure_policy: "stop_and_report"
+  stop_on_repeated_error: true
+human_gate:
+  required_for:
+    - deletion
+    - secrets
+    - public_posting
+    - production_deploy
+    - payments
+  approval_format: "APPROVE LOOP ACTION: <action> / <scope> / <rollback>"
+outputs:
+  artifacts:
+    - "reports/diagnostic.md"
+receipt:
+  required: true
+  path: "receipts/diagnostic.receipt.md"

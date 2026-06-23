@@ -1,0 +1,63 @@
+schema_version: "1.0"
+name: "research-watchlist-loop"
+goal: "Collect source candidates, dedupe them, and write a sourced watchlist report."
+risk_class: "L1"
+trigger:
+  type: manual
+  schedule: null
+  timezone: null
+inputs:
+  required:
+    - "source list and keywords"
+  optional: []
+state:
+  backend: file
+  location: "state/research-watchlist.json"
+  read_before_run: true
+  update_after_run: true
+tools:
+  allowed:
+    - web_search
+    - web_extract
+    - write_report
+  forbidden_actions:
+    - delete_files
+    - access_secrets
+    - public_posting
+    - production_deploy
+    - payments
+isolation:
+  mode: read_only
+  notes: "Collect and report only."
+verification:
+  deterministic_checks:
+    - name: source_urls_present
+      method: report checklist
+      pass_condition: every promoted item has a source URL
+  review_checks:
+    - name: human_readability
+      reviewer: human
+      rubric: "Can a human understand the receipt in two minutes?"
+  definition_of_done:
+    - "receipt written"
+    - "no forbidden action attempted"
+stop_conditions:
+  max_iterations: 1
+  max_runtime_minutes: 20
+  success_signal: "watchlist_report_written"
+  failure_policy: "stop_and_report"
+  stop_on_repeated_error: true
+human_gate:
+  required_for:
+    - deletion
+    - secrets
+    - public_posting
+    - production_deploy
+    - payments
+  approval_format: "APPROVE LOOP ACTION: <action> / <scope> / <rollback>"
+outputs:
+  artifacts:
+    - "reports/research-watchlist.md"
+receipt:
+  required: true
+  path: "receipts/research-watchlist.receipt.md"

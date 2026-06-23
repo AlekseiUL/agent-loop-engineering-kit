@@ -1,0 +1,37 @@
+loop_name: coding-fix-loop
+run_id: example-coding-fix-loop-001
+status: DRY_RUN
+trigger: manual example
+started_at: "2026-06-23T12:00:00Z"
+ended_at: "2026-06-23T12:01:00Z"
+hermes_profile: example-profile
+agent_version: unknown
+loop_spec_version: "1.0"
+input_summary: "Dry-run example for a worktree-isolated coding fix loop; no files changed."
+input_hashes: []
+actions_taken:
+  - validated loop spec
+  - confirmed worktree isolation requirement
+tool_calls: []
+commands_run:
+  - command: python scripts/validate_loop_spec.py examples/coding-fix-loop/loop-spec.yaml
+    exit_code: 0
+    evidence: PASS
+verification:
+  - name: spec_validation
+    result: PASS
+    evidence: scripts/validate_loop_spec.py
+  - name: worktree_required
+    result: PASS
+    evidence: isolation.mode is git_worktree
+stop_reason: dry_run_example_complete
+changed_files: []
+approval_events: []
+redactions: []
+rollback_available: false
+rollback: null
+artifacts:
+  - receipts/coding-fix-loop.receipt.md
+risks:
+  - dry run does not prove the coding fix works
+  - real run must include diff, tests and verifier review

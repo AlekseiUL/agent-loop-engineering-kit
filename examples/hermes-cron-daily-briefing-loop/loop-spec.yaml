@@ -1,0 +1,70 @@
+schema_version: "1.0"
+name: "hermes-cron-daily-briefing-loop"
+goal: "Create a read-only daily briefing from configured project sources with sources, open questions and a receipt."
+risk_class: "L1"
+trigger:
+  type: cron
+  schedule: "0 9 * * *"
+  timezone: "local"
+inputs:
+  required:
+    - "project notes folder or source list"
+  optional:
+    - "previous briefing receipt"
+state:
+  backend: file
+  location: "state/hermes-cron-daily-briefing.json"
+  read_before_run: true
+  update_after_run: true
+tools:
+  allowed:
+    - read_files
+    - search_files
+    - write_report
+  forbidden_actions:
+    - delete_files
+    - access_secrets
+    - public_posting
+    - production_deploy
+    - payments
+isolation:
+  mode: read_only
+  notes: "Cron run is read-only except report/receipt outputs."
+verification:
+  deterministic_checks:
+    - name: sources_present
+      method: check that source list is non-empty
+      pass_condition: briefing contains at least one source reference
+    - name: receipt_rendered
+      method: render_loop_receipt.py validates run record
+      pass_condition: receipt renderer exits 0
+  review_checks:
+    - name: human_readability
+      reviewer: owner
+      rubric: "Can the owner understand sources, decisions, open questions and risks in two minutes?"
+  definition_of_done:
+    - "briefing written"
+    - "sources listed"
+    - "audit-grade receipt written"
+    - "no forbidden action attempted"
+stop_conditions:
+  max_iterations: 1
+  max_runtime_minutes: 15
+  success_signal: "briefing_with_sources_and_receipt_written"
+  failure_policy: "stop_and_report"
+  stop_on_repeated_error: true
+human_gate:
+  required_for:
+    - deletion
+    - secrets
+    - public_posting
+    - production_deploy
+    - payments
+  approval_format: "APPROVE LOOP ACTION: <action> / <scope> / <rollback> / <expires>"
+outputs:
+  artifacts:
+    - "reports/daily-briefing.md"
+    - "receipts/hermes-cron-daily-briefing.latest.md"
+receipt:
+  required: true
+  path: "receipts/hermes-cron-daily-briefing.latest.md"

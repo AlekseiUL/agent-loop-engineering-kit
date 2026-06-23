@@ -1,0 +1,67 @@
+schema_version: "1.0"
+name: "coding-fix-loop"
+goal: "Implement one bounded fix in an isolated worktree, then verify with tests."
+risk_class: "L3"
+trigger:
+  type: github_issue
+  schedule: null
+  timezone: null
+inputs:
+  required:
+    - "issue body, repository path, allowed paths, test command"
+  optional: []
+state:
+  backend: github_issue
+  location: "issue-url-or-id"
+  read_before_run: true
+  update_after_run: true
+tools:
+  allowed:
+    - read_files
+    - search_files
+    - terminal_tests
+    - patch_files_in_worktree
+  forbidden_actions:
+    - delete_files
+    - access_secrets
+    - public_posting
+    - production_deploy
+    - payments
+isolation:
+  mode: git_worktree
+  notes: "All writes happen in an isolated worktree."
+verification:
+  deterministic_checks:
+    - name: unit_tests
+      method: project test command
+      pass_condition: exit code 0
+    - name: diff_scope
+      method: git diff --name-only against base
+      pass_condition: only allowed paths changed
+  review_checks:
+    - name: human_readability
+      reviewer: human
+      rubric: "Can a human understand the receipt in two minutes?"
+  definition_of_done:
+    - "receipt written"
+    - "no forbidden action attempted"
+stop_conditions:
+  max_iterations: 2
+  max_runtime_minutes: 30
+  success_signal: "tests_and_diff_scope_pass"
+  failure_policy: "retry_once_then_stop"
+  stop_on_repeated_error: true
+human_gate:
+  required_for:
+    - deletion
+    - secrets
+    - public_posting
+    - production_deploy
+    - payments
+  approval_format: "APPROVE LOOP ACTION: <action> / <scope> / <rollback>"
+outputs:
+  artifacts:
+    - "diff.patch"
+receipt:
+  required: true
+  path: "receipts/coding-fix.receipt.md"
