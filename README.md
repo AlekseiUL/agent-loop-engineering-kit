@@ -12,6 +12,13 @@
   <code>build loops</code> · <code>verify reality</code> · <code>stop safely</code>
 </p>
 
+<p align="center">
+  <a href="https://youtube.com/@alekseiulianov">YouTube</a> ·
+  <a href="https://t.me/Sprut_AI">Telegram channel</a> ·
+  <a href="https://t.me/+eH-qNIDmud8zNDZi">Telegram chat</a> ·
+  <a href="https://t.me/tribute/app?startapp=sJyg">AI Операционка</a>
+</p>
+
 ---
 
 ## What this is
@@ -250,6 +257,16 @@ Default rule: no cross-profile access and no writes to Hermes memory, skills, cr
 
 ---
 
+## Useful links
+
+- [YouTube: Aleksei Ulianov — AI agents](https://youtube.com/@alekseiulianov)
+- [Telegram channel: Sprut AI](https://t.me/Sprut_AI)
+- [Telegram chat: Sprut AI](https://t.me/+eH-qNIDmud8zNDZi)
+- [AI Операционка](https://t.me/tribute/app?startapp=sJyg)
+- [Hermes Agent](https://github.com/NousResearch/hermes-agent)
+
+---
+
 ## Repository contents
 
 | Path | Purpose |
@@ -359,6 +376,14 @@ flowchart TD
 Сухой критерий:
 
 > Если loop нельзя проверить, остановить и расследовать по receipt — его рано автоматизировать.
+
+## Полезные ссылки
+
+- [YouTube: Алексей Ульянов — AI-агенты](https://youtube.com/@alekseiulianov)
+- [Telegram-канал Sprut AI](https://t.me/Sprut_AI)
+- [Telegram-чат Sprut AI](https://t.me/+eH-qNIDmud8zNDZi)
+- [AI Операционка](https://t.me/tribute/app?startapp=sJyg)
+- [Hermes Agent](https://github.com/NousResearch/hermes-agent)
 
 ## Статус
 
