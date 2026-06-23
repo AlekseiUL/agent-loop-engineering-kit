@@ -83,17 +83,21 @@ Core rule:
 
 ## Install
 
+Prerequisites: Python 3.11+ and either `uv` or `pipx`.
+
 Recommended:
 
 ```bash
 uv tool install https://github.com/AlekseiUL/agent-loop-engineering-kit.git
 ```
 
-Alternative:
+If you do not have `uv`, install it from <https://docs.astral.sh/uv/> or use `pipx`:
 
 ```bash
 pipx install git+https://github.com/AlekseiUL/agent-loop-engineering-kit.git
 ```
+
+For v0.1 this is a GitHub install. PyPI publishing is a later packaging step.
 
 From a local checkout:
 
@@ -148,6 +152,32 @@ hermes-loop privacy-scan .
 ```
 
 Expected result: a validated spec, a quality score, a dry-run run-record, and an audit receipt. The dry run does **not** execute the real agent task.
+
+## After dry-run: manual Hermes run
+
+After the contract dry-run passes, run the first real attempt manually in Hermes. Keep it read-only until the receipt proves the process is bounded.
+
+```text
+Use this loop spec as the contract for one manual read-only run.
+Do not create cron/webhook/Kanban jobs.
+Do not write to Hermes memory, skills, cron or config.
+Return: inputs used, tools/actions taken, verification output, stop reason, unresolved risks and receipt path.
+
+<attach or paste loop-spec.yaml>
+```
+
+Only after a clean manual run should you fill `templates/hermes-activation-plan.md` and consider cron/webhook/Kanban.
+
+Example receipt shape:
+
+```text
+# Loop Run Receipt
+- Loop: `example-loop`
+- Status: `DRY_RUN`
+- Verification: PASS
+- Stop reason: contract dry run completed
+- External side effects: none
+```
 
 ---
 
