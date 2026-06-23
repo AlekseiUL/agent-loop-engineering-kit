@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.1 - 2026-06-23
+
+### Added
+
+- `hermes-loop audit-report` for a CI-friendly loop promotion gate with JSON and Markdown output.
+- Production readiness checklist under `docs/09-production-readiness.md`.
+- Source-tree `scripts/audit_report.py` entrypoint.
+
+### Changed
+
+- Replaced duplicated source-tree CLI scripts with thin wrappers around the installable `hermes_loop` package modules.
+- Completed MIT license text so GitHub/package consumers can identify the license reliably.
+
 ## 0.1.0
 
 Public v0.1 contract for the Hermes Agent Loop Kit.

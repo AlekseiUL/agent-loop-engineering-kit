@@ -1,11 +1,12 @@
 [project]
 name = "agent-loop-engineering-kit"
-version = "0.1.0"
+version = "0.1.1"
 description = "Design, validate, dry-run and audit safe Hermes Agent loop contracts before automation"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = ["PyYAML>=6", "jsonschema>=4"]
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE"]
 keywords = ["hermes-agent", "agents", "automation", "safety", "loop-engineering"]
 
 [project.urls]
@@ -20,7 +21,12 @@ hermes-loop = "hermes_loop.cli:main"
 dev = ["pytest>=8"]
 
 [tool.setuptools]
-packages = ["hermes_loop"]
+packages = [
+  "hermes_loop",
+  "hermes_loop.resources",
+  "hermes_loop.resources.schemas",
+  "hermes_loop.resources.templates",
+]
 
 [tool.setuptools.package-data]
 hermes_loop = ["resources/schemas/*.json", "resources/templates/*.md", "resources/templates/*.yaml"]

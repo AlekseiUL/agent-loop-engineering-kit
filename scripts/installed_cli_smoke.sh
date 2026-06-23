@@ -16,6 +16,8 @@ cd "$repo"
 "$venv/bin/hermes-loop" validate examples/daily-briefing-loop/loop-spec.yaml --json >/dev/null
 "$venv/bin/hermes-loop" score examples/daily-briefing-loop/loop-spec.yaml --json >/dev/null
 "$venv/bin/hermes-loop" dry-run examples/daily-briefing-loop/loop-spec.yaml --out "$out/dry-run" --json >/dev/null
+"$venv/bin/hermes-loop" audit-report examples/daily-briefing-loop/loop-spec.yaml --json >/dev/null
+"$venv/bin/hermes-loop" audit-report examples/bad-cron-repo-editor/loop-spec.yaml --json >/dev/null && { echo 'bad example audit unexpectedly passed'; exit 1; } || true
 "$venv/bin/hermes-loop" render-receipt examples/daily-briefing-loop/run-record.yaml >/dev/null
 "$venv/bin/hermes-loop" privacy-scan . --json >/dev/null
 

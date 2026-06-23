@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 from importlib import resources
 
-from hermes_loop import dry_run_loop, evaluate_loop_spec, render_loop_receipt, scan_loop_privacy, validate_loop_spec
+from hermes_loop import audit_report, dry_run_loop, evaluate_loop_spec, render_loop_receipt, scan_loop_privacy, validate_loop_spec
 
 
 def resource_path(*parts: str):
@@ -45,6 +45,18 @@ def cmd_privacy_scan(args: argparse.Namespace) -> int:
     return scan_loop_privacy.main([args.root, *( ["--json"] if args.json else [] )])
 
 
+def cmd_audit_report(args: argparse.Namespace) -> int:
+    return audit_report.main(
+        [
+            args.loop_spec,
+            "--min-score",
+            str(args.min_score),
+            *( ["--json"] if args.json else [] ),
+            *( ["--out", args.out] if args.out else [] ),
+        ]
+    )
+
+
 def cmd_smoke(_: argparse.Namespace) -> int:
     cwd = Path.cwd()
     source_smoke = cwd / "scripts" / "smoke.sh"
@@ -74,7 +86,7 @@ def cmd_init(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="hermes-loop", description="Design, validate and dry-run safe Hermes Agent loops.")
+    parser = argparse.ArgumentParser(prog="hermes-loop", description="Design, validate, audit and dry-run safe Hermes Agent loops.")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p = sub.add_parser("validate", help="Validate loop spec schema and safety rules")
@@ -102,6 +114,13 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("root", nargs="?", default=".")
     p.add_argument("--json", action="store_true")
     p.set_defaults(func=cmd_privacy_scan)
+
+    p = sub.add_parser("audit-report", help="Build a loop promotion audit report")
+    p.add_argument("loop_spec")
+    p.add_argument("--min-score", type=int, default=85)
+    p.add_argument("--json", action="store_true")
+    p.add_argument("--out")
+    p.set_defaults(func=cmd_audit_report)
 
     p = sub.add_parser("smoke", help="Run repository smoke checks")
     p.set_defaults(func=cmd_smoke)

@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from hermes_loop.scan_loop_privacy import main
+from hermes_loop.audit_report import main
 
 if __name__ == "__main__":
     raise SystemExit(main())

@@ -14,8 +14,9 @@ Manual first. Read-only first. Receipt always. Automation later.
    ```bash
    python scripts/validate_loop_spec.py <loop-spec.yaml>
    python scripts/evaluate_loop_spec.py <loop-spec.yaml>
+   python scripts/audit_report.py <loop-spec.yaml> --json > audit-report.json
    ```
-4. If score is below 85, improve the lowest scoring category before activation.
+4. If validation fails, score is below 85, or audit report says `"ok": false`, improve the lowest scoring category before activation.
 5. Run one manual dry run and render a receipt.
 6. Stop on missing source, failed verification, repeated error, forbidden action or human-gate condition.
 

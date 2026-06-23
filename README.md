@@ -58,7 +58,7 @@ It does **not**:
 - prove that a model answer is true;
 - make unattended automation safe by itself.
 
-`v0.1` is a **design + validation + dry-run + receipt + privacy scan** kit.
+`v0.1` is a **design + validation + promotion audit + dry-run + receipt + privacy scan** kit.
 
 ---
 
@@ -140,6 +140,12 @@ Score whether it is actually loop-engineered:
 hermes-loop score /tmp/my-loop.yaml
 ```
 
+Build a promotion audit report:
+
+```bash
+hermes-loop audit-report /tmp/my-loop.yaml --json > /tmp/my-loop-audit.json
+```
+
 Create a dry-run record and receipt:
 
 ```bash
@@ -194,6 +200,7 @@ Example receipt shape:
 hermes-loop init <path>
 hermes-loop validate <loop-spec.yaml>
 hermes-loop score <loop-spec.yaml>
+hermes-loop audit-report <loop-spec.yaml>
 hermes-loop dry-run <loop-spec.yaml> --out <dir>
 hermes-loop render-receipt <run-record.yaml>
 hermes-loop privacy-scan <path>
@@ -277,6 +284,7 @@ Default rule: no cross-profile access and no writes to Hermes memory, skills, cr
 | `examples/` | Good examples, bad examples and Hermes cron promotion example |
 | `docs/07-hermes-lifecycle.md` | Prompt → spec → dry-run → manual run → activation path |
 | `docs/08-threat-model.md` | Threat model for Hermes loops |
+| `docs/09-production-readiness.md` | Production readiness and CI promotion gates |
 | `scripts/` | Source-tree scripts and release smoke checks |
 | `tests/` | Pytest regression suite |
 
@@ -327,6 +335,7 @@ Manual checks:
 - `hermes-loop init` — создать шаблон loop spec;
 - `hermes-loop validate` — проверить схему и safety gates;
 - `hermes-loop score` — понять, это реально loop engineering или просто красивый YAML;
+- `hermes-loop audit-report` — получить machine-readable promotion gate для CI/релиза;
 - `hermes-loop dry-run` — создать dry-run run-record и receipt;
 - `hermes-loop render-receipt` — собрать читаемый audit receipt;
 - `hermes-loop privacy-scan` — поймать частые утечки секретов/приватных путей;
