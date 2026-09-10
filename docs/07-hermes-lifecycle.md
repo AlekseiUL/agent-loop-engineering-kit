@@ -27,12 +27,15 @@ Copy `templates/loop-spec.yaml` and fill:
 - human gates;
 - receipt path.
 
-Validate and score:
+Validate, score and produce a promotion audit:
 
 ```bash
 python scripts/validate_loop_spec.py path/to/loop-spec.yaml
 python scripts/evaluate_loop_spec.py path/to/loop-spec.yaml
+python scripts/audit_report.py path/to/loop-spec.yaml --json > path/to/audit-report.json
 ```
+
+The audit report is the CI-friendly promotion gate. It must return `"ok": true` and `promotion.ready_for: manual_read_only_run` before the first real Hermes run.
 
 ## 3. Contract dry run
 

@@ -18,6 +18,8 @@ python scripts/validate_loop_spec.py examples/bad-cron-repo-editor/loop-spec.yam
 python scripts/evaluate_loop_spec.py examples/emulation-prompt-only.yaml || true
 python scripts/evaluate_loop_spec.py "${good_specs[@]}"
 python scripts/dry_run_loop.py examples/daily-briefing-loop/loop-spec.yaml --run-record-out "$tmp/daily-run-record.yaml" --receipt-out "$tmp/daily-receipt.md"
+python scripts/audit_report.py examples/daily-briefing-loop/loop-spec.yaml --json > "$tmp/daily-audit.json"
+python scripts/audit_report.py examples/bad-cron-repo-editor/loop-spec.yaml --json >/dev/null && { echo 'bad example audit unexpectedly passed'; exit 1; } || true
 python scripts/render_loop_receipt.py examples/daily-briefing-loop/run-record.yaml > "$tmp/daily-briefing.receipt.md"
 python scripts/scan_loop_privacy.py .
 pytest -q

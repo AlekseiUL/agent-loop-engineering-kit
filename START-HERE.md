@@ -52,14 +52,15 @@ The eight blocks:
 7. Verification — how reality is checked.
 8. Stop / human gate / receipt — how it ends.
 
-## 3. Validate and score
+## 3. Validate, score and audit
 
 ```bash
 hermes-loop validate /tmp/daily-briefing-loop.yaml
 hermes-loop score /tmp/daily-briefing-loop.yaml
+hermes-loop audit-report /tmp/daily-briefing-loop.yaml --json > /tmp/daily-briefing-audit.json
 ```
 
-If the score is low, fix the spec before running anything in Hermes.
+If validation fails, the score is low, or the audit report says `"ok": false`, fix the spec before running anything in Hermes.
 
 ## 4. Dry-run the contract
 

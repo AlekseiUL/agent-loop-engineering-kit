@@ -50,3 +50,41 @@ def test_cli_init_refuses_overwrite(tmp_path):
     second = subprocess.run([sys.executable, "-m", "hermes_loop.cli", "init", str(target)], cwd=ROOT, text=True, capture_output=True)
     assert first.returncode == 0
     assert second.returncode != 0
+
+
+def test_cli_audit_report_json_ready_loop():
+    r = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "hermes_loop.cli",
+            "audit-report",
+            "examples/daily-briefing-loop/loop-spec.yaml",
+            "--json",
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert '"ok": true' in r.stdout
+    assert '"ready_for": "manual_read_only_run"' in r.stdout
+
+
+def test_cli_audit_report_json_blocks_bad_loop():
+    r = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "hermes_loop.cli",
+            "audit-report",
+            "examples/bad-cron-repo-editor/loop-spec.yaml",
+            "--json",
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    assert r.returncode != 0
+    assert '"ok": false' in r.stdout
+    assert "cron-triggered L3+ blocked by default" in r.stdout

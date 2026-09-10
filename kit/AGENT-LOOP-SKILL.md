@@ -20,8 +20,12 @@ Use this when a Hermes user wants to turn repeated agent work into a safe loop.
    ```bash
    python scripts/evaluate_loop_spec.py path/to/loop-spec.yaml
    ```
-6. Run manually and read-only first. Save a run record and receipt.
-7. Automate only after the receipt proves the loop stops, verifies and escalates correctly.
+6. Build a promotion audit gate:
+   ```bash
+   python scripts/audit_report.py path/to/loop-spec.yaml --json > path/to/audit-report.json
+   ```
+7. Run manually and read-only first. Save a run record and receipt.
+8. Automate only after the audit report is `ok`, the receipt proves the loop stops, verifies and escalates correctly, and an activation plan exists.
 
 ## Hard brakes
 
