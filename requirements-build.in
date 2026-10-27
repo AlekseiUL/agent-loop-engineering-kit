@@ -1,0 +1,4 @@
+# Build and test tools included in the dependency audit.
+setuptools>=69
+build>=1.2
+pytest>=8
